@@ -52,16 +52,16 @@ async fn get_file(file: PathBuf) -> Option<NamedFile> {
     NamedFile::open(Path::new("public/").join(file)).await.ok()
 }
 
-#[rocket::post("/api/matches", format = "json", data = "<req>")]
-async fn matches(state: &State<Client>, req: Json<MatchRequest>) -> Result<Json<Matches>, Status> {
-    let mut matches = match db::get_matches(state.inner(), req.uid.clone()).await {
+#[rocket::get("/api/matches/<uid>/<limit>")]
+async fn matches(state: &State<Client>, uid: String, limit: usize) -> Result<Json<Matches>, Status> {
+    let mut matches = match db::get_matches(state.inner(), uid.clone()).await {
         Ok(n) => n,
         Err(_) => {return Err(Status::InternalServerError);}
     };
 
-    println!("got matches for {}: {:?}", req.uid, matches);
+    println!("got matches for {}: {:?}", uid, matches);
 
-    matches.matches.truncate(req.limit);
+    matches.matches.truncate(limit);
     Ok(Json(matches))
 }
 
@@ -101,36 +101,6 @@ async fn get_api(state: &State<Client>) -> Status {
         false => Status::InternalServerError,
     }
 
-}
-
-
-pub struct CORS;
-
-#[rocket::async_trait]
-impl Fairing for CORS {
-    fn info(&self) -> Info {
-        Info {
-            name: "Add CORS headers to responses",
-            kind: Kind::Response,
-        }
-    }
-
-    async fn on_response<'r>(&self, request: &'r Request<'_>, response: &mut Response<'r>) {
-        if request.method() == Method::Options {
-            response.set_status(Status::NoContent);
-            response.set_header(Header::new(
-                "Access-Control-Allow-Methods",
-                "POST, PATCH, GET, DELETE",
-            ));
-            response.set_header(Header::new("Access-Control-Allow-Headers", "*"));
-        }
-
-        response.set_header(Header::new(
-            "Access-Control-Allow-Origin",
-            "http://localhost:3000",
-        ));
-        response.set_header(Header::new("Access-Control-Allow-Credentials", "true"));
-    }
 }
 
 #[rocket::put("/api/info", format = "json", data = "<user>")]
@@ -173,7 +143,6 @@ pub fn start_api() {
             let _ = rocket::build()
             .mount("/", rocket::routes![get_file, matches, users, info, add_user, get_api])
             .manage(client)
-            .attach(CORS)
             .launch()
             .await;
         });

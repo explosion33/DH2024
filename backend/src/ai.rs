@@ -14,6 +14,8 @@ const PROMPT: &str = "I have a list of users containing the skills they have and
     DO NOT RETURN STEPS OR CODE. Instead return lists of percentages and uids based off of your analysis.
     For example, the output should look as follows.
 
+    DO NOT RETURN AN EXAMPLE STRUCUTRE. RETURN THE FULL EXPECTED OUTPUT
+
     {
         \"1\": {
             \"2\": {
@@ -65,7 +67,7 @@ pub async fn call_and_parse(users: Vec<User>) -> Result<Vec<Matches>, ()> {
         "model": "llama-3.1-sonar-large-128k-online",
         "messages": [{"role": "user", "content": body}],
         "temperature": 0.15f32,
-        "max_tokens": 2000,
+        "max_tokens": 5000,
         "stream": false
     }).to_string();
     println!("body: {}", payload);
@@ -87,6 +89,8 @@ pub async fn call_and_parse(users: Vec<User>) -> Result<Vec<Matches>, ()> {
     response = response.replace("\\n", "\n");
     response = response.replace("\\\"", "\"");
     
+
+    println!("raw: {}", response);
 
     //println!("res: {}", response.as_str());
 
