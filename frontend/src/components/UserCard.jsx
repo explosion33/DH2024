@@ -6,31 +6,40 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import CardActions from '@mui/material/CardActions';
 
-const UserCard = () => {
+const UserCard = ({ user }) => {
 
     return (
-            <Card sx={{ maxWidth: 345 }}>
-                <CardMedia
-                    component="img"
-                    height="140"
-                    image="image"
-                    alt=""
-                />
-                <CardContent>
-                    <Typography gutterBottom variant="h5" component="div">
-                        "Name"
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                        Looking for:
-                        Offering:
-                    </Typography>
-                </CardContent>
-                <CardActions>
-                    <Button size="small">Share</Button>
-                    <Button size="small">Learn More</Button>
-                </CardActions>
-            </Card>
-        )
+        <Card sx={{
+            width: 300,            // Sets a fixed width for all cards
+            height: 300,           // Sets a fixed height for all cards
+        }}>
+            <CardMedia
+                component="img"
+                height="140"
+                image={user.image}
+                alt={`${user.first} ${user.last}`}
+                sx={{
+                    maxWidth: '100%',      // Sets max width relative to the Card component
+                    maxHeight: 140,        // Sets the max height
+                    objectFit: 'cover'     // Ensures the image scales to fit within the dimensions without distortion
+                }}
+            />
+            <CardContent>
+                <Typography gutterBottom variant="h5" component="div">
+                    {user.first} {user.last}
+                </Typography>
+                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                    Looking for: {user.wants[0]}
+                    <br />
+                    Offering: {user.skills[0] || "No skills listed"}
+                </Typography>
+            </CardContent>
+            <CardActions>
+                <Button size="small">Share</Button>
+                <Button size="small">Learn More</Button>
+            </CardActions>
+        </Card>
+    )
 };
 
 

@@ -1,32 +1,61 @@
 import { React, useState, useEffect } from 'react';
 import Stack from '@mui/material/Stack';
 import UserCard from './UserCard';
+import { useAuth0 } from "@auth0/auth0-react";
+import { fakeUsers } from './FakeUser'
+
 
 const UsersLayout = () => {
 
-    const getUsers = async () => {
-        const response = await fetch('/');
-        const usersJson = await response.json();
-        let users = [];
+    // const { user, isAuthenticated, isLoading } = useAuth0();
+    let users = [];
 
-        for (let user in usersJson){
-            users.push(user);
-        }
-    } 
+    // const getUsers = () => {
 
-    useEffect(() => {
-        getUsers();
-    }, []);
+    //     users = fakeUsers;
+    //     console.log(users);
+
+    //     // const response = await fetch('http://127.0.0.1:80/users/100', {
+    //     //     method: "GET",
+    //     //     headers: {
+    //     //       "Content-Type": "application/json",
+    //     //       "Accept": "application/json"
+    //     //     },
+    //     //   });
+
+    //     //   const userJson = await response.json();
+    //     // // const actualResults = await response.text();
+    //     // console.log("user json:", userJson);
+
+    //     // for (let user in users) {
+    //     //     users.push(user);
+    //     // }
+    // }
+
+    // useEffect(() => {
+    //     getUsers();
+    // }, []);
+
+    users = fakeUsers;
+    console.log(users);
+
 
     return (
-        <Stack direction="row" spacing={2}>
-            {users.map((user, i) => 
-                <UserCard 
-                key={i}
-                user={user}
-                />)
-            }
-        </Stack>
+        <>
+            <Stack spacing={3}
+                direction="row"
+                useFlexGap
+                justifyContent="center"       // Centers items horizontally
+                alignItems="center"  
+                sx={{ flexWrap: 'wrap' }}>
+                {users.map((user, i) =>
+                    <UserCard
+                        key={i}
+                        user={user}
+                    />)
+                }
+            </Stack>
+        </>
     )
 };
 
