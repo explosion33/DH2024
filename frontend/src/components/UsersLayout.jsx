@@ -24,13 +24,14 @@ const UsersLayout = () => {
                 for (let user of response.matches) {
                     users.push(user.uid);
                 }
-                console.log(users);
             }));
 
      }
 
      //useEffect(() => {
          getUsers();
+
+         console.log("users", users);
      //}, []);
 
     return (
