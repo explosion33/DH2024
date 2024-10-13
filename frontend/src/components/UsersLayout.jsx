@@ -24,9 +24,9 @@ const UsersLayout = () => {
           }
      }
 
-     useEffect(() => {
+     //useEffect(() => {
          getUsers();
-     }, []);
+     //}, []);
 
     return (
         <>

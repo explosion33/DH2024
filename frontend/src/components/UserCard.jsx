@@ -13,15 +13,15 @@ const UserCard = ({ user }) => {
 
     const handleOpen = () => setOpen(true);
 
-    const getInfo = () =>{
+    let response = {};
 
-    return  fetch('https://e2.armstronglabs.net/api/info/'+user, {
-        method: "GET",
-        headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json"
-        },
-    }).then(response => response.json());
+    const getInfo = () =>{
+        response = fetch('https://e2.armstronglabs.net/api/info/'+user, {
+            method: "GET",
+            headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        }}).then(response => response.json());
     }
      useEffect(() => {
          getInfo();
