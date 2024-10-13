@@ -2,43 +2,32 @@ import { React, useState, useEffect } from 'react';
 import Stack from '@mui/material/Stack';
 import UserCard from './UserCard';
 import { useAuth0 } from "@auth0/auth0-react";
-import { fakeUsers } from './FakeUser'
 
 
 const UsersLayout = () => {
 
-    // const { user, isAuthenticated, isLoading } = useAuth0();
+    const { user } = useAuth0();
     let users = [];
 
-    // const getUsers = () => {
+    const getUsers = () => {
 
-    //     users = fakeUsers;
-    //     console.log(users);
+          const response = fetch('https://e2.armstronglabs.net/api/matches', {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+              },
+              body: JSON.stringify({uid: user?.sub, limit: 100})
+            }).then(response => response.json());
 
-    //     // const response = await fetch('http://127.0.0.1:80/users/100', {
-    //     //     method: "GET",
-    //     //     headers: {
-    //     //       "Content-Type": "application/json",
-    //     //       "Accept": "application/json"
-    //     //     },
-    //     //   });
+         for (let user in response.matches) {
+              users.push(user.uid);
+          }
+     }
 
-    //     //   const userJson = await response.json();
-    //     // // const actualResults = await response.text();
-    //     // console.log("user json:", userJson);
-
-    //     // for (let user in users) {
-    //     //     users.push(user);
-    //     // }
-    // }
-
-    // useEffect(() => {
-    //     getUsers();
-    // }, []);
-
-    users = fakeUsers;
-    console.log(users);
-
+     useEffect(() => {
+         getUsers();
+     }, []);
 
     return (
         <>

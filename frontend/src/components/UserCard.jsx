@@ -13,6 +13,13 @@ const UserCard = ({ user }) => {
 
     const handleOpen = () => setOpen(true);
 
+    const response = fetch('https://e2.armstronglabs.net/api/info/'+user, {
+        method: "GET",
+        headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+        },
+    }).then(response => response.json());
     return (
         <Card sx={{
             width: 300,            // Sets a fixed width for all cards
@@ -21,8 +28,8 @@ const UserCard = ({ user }) => {
             <CardMedia
                 component="img"
                 height="140"
-                image={user.image}
-                alt={`${user.first} ${user.last}`}
+                image="https://mui.com/static/images/cards/contemplative-reptile.jpg"
+                alt={`${response.first} ${response.last}`}
                 sx={{
                     maxWidth: '100%',      // Sets max width relative to the Card component
                     maxHeight: 140,        // Sets the max height
@@ -31,12 +38,12 @@ const UserCard = ({ user }) => {
             />
             <CardContent>
                 <Typography gutterBottom variant="h5" component="div">
-                    {user.first} {user.last}
+                    {response.first} {response.last}
                 </Typography>
                 <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                    Looking for: {user.wants[0]}
+                    Looking for: {response.wants[0]}
                     <br />
-                    Offering: {user.skills[0] || "No skills listed"}
+                    Offering: {response.skills[0] || "No skills listed"}
                 </Typography>
             </CardContent>
             <CardActions>

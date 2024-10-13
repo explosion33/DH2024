@@ -8,7 +8,7 @@ const HomePage = () => {
     
     if(isAuthenticated && user){
         try{
-            fetch('http://localhost:8081/info/'+user?.sub, {
+            fetch('https://e2.armstronglabs.net/api/info/'+user?.sub, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',

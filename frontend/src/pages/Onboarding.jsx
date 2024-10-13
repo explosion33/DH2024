@@ -18,7 +18,7 @@ const Onboarding = () => {
         (stage == 0) ? <Introduction setStage={setStage} setContact={setContact} /> : 
         (stage == 1) ? <SkillsNeeded setStage={setStage} setWants={setWants}  /> : 
         (stage == 2) ? <SkillsMastered setStage={setStage} setSkills={setSkills} /> : 
-        fetch("http://localhost:8081/info", {
+        fetch("https://e2.armstronglabs.net/api/info", {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
