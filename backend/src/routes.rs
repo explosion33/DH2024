@@ -1,5 +1,6 @@
 #![feature(proc_macro_hygiene, decl_macro)]
 
+use crate::ai::call_and_parse;
 use crate::db;
 
 use std::path::{Path, PathBuf};
@@ -20,30 +21,30 @@ use rocket::serde::{Serialize, Deserialize, json::Json};
 
 #[derive(Serialize, Deserialize, PartialEq, Eq, Debug, Clone)]
 pub struct MatchRequest {
-    uid: String,
-    limit: usize,
+    pub uid: String,
+    pub limit: usize,
 }
 
 #[derive(Serialize, Deserialize, PartialEq, Debug, Clone)]
 pub struct Match {
-    uid: String,
-    percent: f32,
+    pub uid: String,
+    pub percent: f32,
 }
 
 #[derive(Serialize, Deserialize, PartialEq, Debug, Clone)]
 pub struct Matches {
-    uid: String,
-    matches: Vec<Match>,
+    pub uid: String,
+    pub matches: Vec<Match>,
 }
 
 #[derive(Serialize, Deserialize, PartialEq, Debug, Clone)]
 pub struct User {
-    uid: String,
-    first: String,
-    last: String,
-    contact: Vec<String>,
-    skills: Vec<String>,
-    wants: Vec<String>,
+    pub uid: String,
+    pub first: String,
+    pub last: String,
+    pub contact: Vec<String>,
+    pub skills: Vec<String>,
+    pub wants: Vec<String>,
 }
 
 #[rocket::get("/static/<file>")]
@@ -86,6 +87,19 @@ async fn info(state: &State<Client>, uid: String) -> Result<Json<User>, Json<()>
     }
 }
 
+#[rocket::get("/ai")]
+async fn get_api(state: &State<Client>) -> Result<Json<Vec<Matches>>, Json<()>>{
+    let users = db::get_random_users(state.inner(), 10).await;
+
+    let res = match call_and_parse(users).await {
+        Ok(n) => n,
+        Err(_) => {return Err(Json(()));}
+    };
+
+    Ok(Json(res))
+
+}
+
 
 pub struct CORS;
 
@@ -123,7 +137,17 @@ async fn add_user(state: &State<Client>, user: Json<User>) -> Status {
     let res = db::add_user(state.inner(), user.into_inner()).await;
     
     if res {
-        Status::Ok
+        let users = db::get_random_users(state.inner(), 10).await;
+
+        let res = match call_and_parse(users).await {
+            Ok(n) => n,
+            Err(_) => {return Status::InternalServerError;}
+        };
+
+        match db::update_matches(state.inner(), res).await {
+            true => Status::Ok,
+            false => Status::InternalServerError,
+        }
     }
     else {
         Status::InternalServerError
@@ -144,7 +168,7 @@ pub fn start_api() {
             println!("DB Connected");
 
             let _ = rocket::build()
-            .mount("/", rocket::routes![get_file, matches, users, info, add_user])
+            .mount("/", rocket::routes![get_file, matches, users, info, add_user, get_api])
             .manage(client)
             .attach(CORS)
             .launch()
