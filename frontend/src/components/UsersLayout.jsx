@@ -42,10 +42,10 @@ const UsersLayout = () => {
                 justifyContent="center"       // Centers items horizontally
                 alignItems="center"  
                 sx={{ flexWrap: 'wrap', margin: '5% auto' }}>
-                {users.map((user, i) =>
+                {users.map((userId, i) =>
                     <UserCard
                         key={i}
-                        userId={user}
+                        userId={userId}
                     />)
                 }
             </Stack>
