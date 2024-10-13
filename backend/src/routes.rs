@@ -88,15 +88,18 @@ async fn info(state: &State<Client>, uid: String) -> Result<Json<User>, Json<()>
 }
 
 #[rocket::get("/ai")]
-async fn get_api(state: &State<Client>) -> Result<Json<Vec<Matches>>, Json<()>>{
+async fn get_api(state: &State<Client>) -> Status {
     let users = db::get_random_users(state.inner(), 10).await;
 
     let res = match call_and_parse(users).await {
         Ok(n) => n,
-        Err(_) => {return Err(Json(()));}
+        Err(_) => {return Status::InternalServerError;}
     };
 
-    Ok(Json(res))
+    match db::update_matches(state.inner(), res).await {
+        true => Status::Ok,
+        false => Status::InternalServerError,
+    }
 
 }
 
