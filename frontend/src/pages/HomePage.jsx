@@ -23,9 +23,9 @@ const HomePage = () => {
             }
         }
     }
-    useEffect(() => {
+    //useEffect(() => {
         tryMe();
-    }, [])
+    //}, [])
     
     const realdirect = () => {
         navigate(dest);
