@@ -20,6 +20,7 @@ const UsersLayout = () => {
               },
             }).then(response => response.json().then(response => {
                 console.log("Filling Users")
+                console.log(response);
                 for (let user in response.matches) {
                     users.push(user.uid);
                 }
