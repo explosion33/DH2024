@@ -12,7 +12,7 @@ const UsersLayout = () => {
     const getUsers = () => {
 
           const response = fetch('https://e2.armstronglabs.net/api/matches', {
-              method: "GET",
+              method: "POST",
               headers: {
                 "Content-Type": "application/json",
                 "Accept": "application/json"
