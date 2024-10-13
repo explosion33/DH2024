@@ -28,11 +28,11 @@ const UsersLayout = () => {
 
      }
 
-     //useEffect(() => {
+     useEffect(() => {
          getUsers();
 
          console.log("users", users);
-     //}, []);
+     }, []);
 
     return (
         <>
