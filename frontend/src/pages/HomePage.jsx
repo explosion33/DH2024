@@ -8,20 +8,22 @@ const HomePage = () => {
     const { isAuthenticated, user } = useAuth0();
     const { dest, setDest } = useState('');
     
-    if(isAuthenticated && user){
-        fetch('https://e2.armstronglabs.net/api/info/'+user?.sub, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        }).then((response) => {
+    const tryMe = async () => {
+        if(isAuthenticated && user){
+            let response = await fetch('https://e2.armstronglabs.net/api/info/'+user?.sub, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
             if (response.status === 200) {
                 setDest('/people');
             } else {
                 setDest('/onboarding');
             }
-        });
+        }
     }
+    tryMe();
 
     return (
         <>
