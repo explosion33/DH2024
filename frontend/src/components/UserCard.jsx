@@ -8,6 +8,7 @@ import CardActions from '@mui/material/CardActions';
 import ContactPaper from './ContactPaper';
 
 const UserCard = ({ userId, key }) => {
+    console.log("UserCard");
 
     const [open, setOpen] = useState(false);
 
@@ -16,6 +17,7 @@ const UserCard = ({ userId, key }) => {
     let response = {};
 
     const getInfo = () =>{
+        console.log("getInfoCalled");
         fetch('https://e2.armstronglabs.net/api/info/'+userId, {
             method: "GET",
             headers: {
@@ -25,6 +27,7 @@ const UserCard = ({ userId, key }) => {
     }
      //useEffect(() => {
          getInfo();
+         console.log("getInfoDone");
      //}, []);
     return (
         <Card sx={{
