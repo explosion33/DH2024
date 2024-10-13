@@ -35,6 +35,8 @@ const UsersLayout = () => {
          console.log("users", users);
      }, []);
 
+    console.log("point")
+
     return (
         <>
             <Stack spacing={3}
