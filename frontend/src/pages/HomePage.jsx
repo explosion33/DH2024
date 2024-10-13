@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useAuth0 } from "@auth0/auth0-react";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const HomePage = () => {
 
@@ -23,7 +23,13 @@ const HomePage = () => {
             }
         }
     }
-    tryMe();
+    useEffect(() => {
+        tryMe();
+    }, [])
+    
+    const realdirect = () => {
+        navigate(dest);
+    }
 
     return (
         <>
@@ -36,7 +42,7 @@ const HomePage = () => {
                     <div>
                         <p>Know a thing or two?</p>
                         <p>Learn a thing or two.</p>
-                        <button onClick={() => navigate(dest)}>{dest == '/onboarding' ? 'Sign Up | Log In' : 'Open App'}</button>
+                        <button onClick={() => realdirect()}>{dest == '/onboarding' ? 'Sign Up | Log In' : 'Open App'}</button>
                     </div>
                 </center>
             </main>
