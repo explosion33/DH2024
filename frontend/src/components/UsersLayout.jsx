@@ -10,7 +10,7 @@ const UsersLayout = () => {
     let users = [];
 
     console.log("UsersLayout");
-    const getUsers = () => {
+    const getUsers = async () => {
         console.log("getUsers")
 
           fetch('https://e2.armstronglabs.net/api/matches/'+user?.sub+'/100', {
@@ -29,8 +29,8 @@ const UsersLayout = () => {
 
      }
 
-     useEffect(() => {
-         getUsers();
+     useEffect(async () => {
+         await getUsers();
 
          console.log("users", users);
      }, []);
