@@ -8,7 +8,6 @@ import Navigation from "./components/Navigation";
 function App() {
   const { user, isAuthenticated, isLoading } = useAuth0();
 
-  console.log({ user, isAuthenticated, isLoading }); // Debugging output
 
   // if (isLoading) {
   //   return <div>Loading ...</div>;
