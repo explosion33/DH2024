@@ -50,7 +50,7 @@ const UserCard = ({ userId }) => {
                     {response.first} {response.last}
                 </Typography>
                 <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                    Looking for: {response.wants[0]}
+                    Looking for: {response.wants[0] || "No Wants"}
                     <br />
                     Offering: {response.skills[0] || "No skills listed"}
                 </Typography>
