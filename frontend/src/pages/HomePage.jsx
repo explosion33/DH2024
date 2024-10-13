@@ -6,8 +6,9 @@ const HomePage = () => {
 
     const navigate = useNavigate();
     const { isAuthenticated, user } = useAuth0();
-    const { dest, setDest } = useState('');
-    
+    //const { dest, setDest } = useState('');
+    let dest = '/onboarding';
+
     const tryMe = async () => {
         if(isAuthenticated && user){
             let response = await fetch('https://e2.armstronglabs.net/api/info/'+user?.sub, {
@@ -17,9 +18,11 @@ const HomePage = () => {
                 },
             });
             if (response.status === 200) {
-                setDest('/people');
+                //setDest('/people');
+                dest = '/people';
             } else {
-                setDest('/onboarding');
+                //setDest('/onboarding');
+                dest = '/onboarding';
             }
         }
     }
