@@ -21,11 +21,8 @@ const UserCard = ({ user }) => {
             headers: {
             "Content-Type": "application/json",
             "Accept": "application/json"
-        }}).then(response => response.json());
+        }}).then(response => response.json().then(response => response));
     }
-     useEffect(() => {
-         getInfo();
-     }, []);
     return (
         <Card sx={{
             width: 300,            // Sets a fixed width for all cards

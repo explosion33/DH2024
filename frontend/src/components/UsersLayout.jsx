@@ -11,17 +11,18 @@ const UsersLayout = () => {
 
     const getUsers = () => {
 
-          const response = fetch('https://e2.armstronglabs.net/api/matches/'+user?.sub+'/100', {
+          fetch('https://e2.armstronglabs.net/api/matches/'+user?.sub+'/100', {
               method: "GET",
               headers: {
                 "Content-Type": "application/json",
                 "Accept": "application/json"
               },
-            }).then(response => response.json());
+            }).then(response => response.json().then(response => {
+                for (let user in response.matches) {
+                    users.push(user.uid);
+                }
+    }));
 
-         for (let user in response.matches) {
-              users.push(user.uid);
-          }
      }
 
      //useEffect(() => {
