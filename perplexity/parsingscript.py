@@ -45,7 +45,7 @@ def _normal_response(
         return {"error": f"Request error: {str(e)}"}
 
 # Usage Example
-api_key = "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"
+api_key = ""
 
 # Define the user message that you want to send to the API
 user_message = """
