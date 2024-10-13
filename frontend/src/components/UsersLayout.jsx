@@ -1,4 +1,3 @@
-import { React, useState, useEffect } from 'react';
 import Stack from '@mui/material/Stack';
 import UserCard from './UserCard';
 import { useAuth0 } from "@auth0/auth0-react";
@@ -9,9 +8,9 @@ const UsersLayout = () => {
     const { user } = useAuth0();
     let users = [];
 
-    const getUsers = () => {
+    const getUsers = async () => {
 
-          fetch('https://e2.armstronglabs.net/api/matches/'+user?.sub+'/100', {
+          await fetch('https://e2.armstronglabs.net/api/matches/'+user?.sub+'/100', {
               method: "GET",
               headers: {
                 "Content-Type": "application/json",
@@ -21,7 +20,7 @@ const UsersLayout = () => {
                 for (let user in response.matches) {
                     users.push(user.uid);
                 }
-    }));
+            }));
 
      }
 

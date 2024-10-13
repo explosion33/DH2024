@@ -15,14 +15,17 @@ const UserCard = ({ user }) => {
 
     let response = {};
 
-    const getInfo = () =>{
-        response = fetch('https://e2.armstronglabs.net/api/info/'+user, {
+    const getInfo = async () =>{
+        response = await fetch('https://e2.armstronglabs.net/api/info/'+user, {
             method: "GET",
             headers: {
             "Content-Type": "application/json",
             "Accept": "application/json"
         }}).then(response => response.json().then(response => response));
     }
+     //useEffect(() => {
+         getInfo();
+     //}, []);
     return (
         <Card sx={{
             width: 300,            // Sets a fixed width for all cards
