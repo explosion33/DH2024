@@ -7,7 +7,7 @@ import Button from '@mui/material/Button';
 import CardActions from '@mui/material/CardActions';
 import ContactPaper from './ContactPaper';
 
-const UserCard = ({ user }) => {
+const UserCard = ({ userId }) => {
 
     const [open, setOpen] = useState(false);
 
@@ -15,13 +15,13 @@ const UserCard = ({ user }) => {
 
     let response = {};
 
-    const getInfo = async () =>{
-        response = await fetch('https://e2.armstronglabs.net/api/info/'+user, {
+    const getInfo = () =>{
+        fetch('https://e2.armstronglabs.net/api/info/'+userId, {
             method: "GET",
             headers: {
             "Content-Type": "application/json",
             "Accept": "application/json"
-        }}).then(response => response.json().then(response => response));
+        }}).then(resp => resp.json().then(res => {response = res; console.log(res);}));
     }
      //useEffect(() => {
          getInfo();

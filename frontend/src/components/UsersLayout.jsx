@@ -44,7 +44,7 @@ const UsersLayout = () => {
                 {users.map((user, i) =>
                     <UserCard
                         key={i}
-                        user={user}
+                        userId={user}
                     />)
                 }
             </Stack>
