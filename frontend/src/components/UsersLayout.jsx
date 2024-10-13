@@ -11,13 +11,12 @@ const UsersLayout = () => {
 
     const getUsers = () => {
 
-          const response = fetch('https://e2.armstronglabs.net/api/matches', {
-              method: "POST",
+          const response = fetch('https://e2.armstronglabs.net/api/matches/'+user?.sub+'/100', {
+              method: "GET",
               headers: {
                 "Content-Type": "application/json",
                 "Accept": "application/json"
               },
-              body: JSON.stringify({uid: user?.sub, limit: 100})
             }).then(response => response.json());
 
          for (let user in response.matches) {

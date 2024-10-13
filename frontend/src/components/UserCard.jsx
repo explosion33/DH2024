@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
@@ -13,13 +13,19 @@ const UserCard = ({ user }) => {
 
     const handleOpen = () => setOpen(true);
 
-    const response = fetch('https://e2.armstronglabs.net/api/info/'+user, {
+    const getInfo = () =>{
+
+    return  fetch('https://e2.armstronglabs.net/api/info/'+user, {
         method: "GET",
         headers: {
         "Content-Type": "application/json",
         "Accept": "application/json"
         },
     }).then(response => response.json());
+    }
+     useEffect(() => {
+         getInfo();
+     }, []);
     return (
         <Card sx={{
             width: 300,            // Sets a fixed width for all cards
