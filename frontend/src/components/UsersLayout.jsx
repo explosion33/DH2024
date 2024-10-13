@@ -29,8 +29,8 @@ const UsersLayout = () => {
 
      }
 
-     useEffect(async () => {
-         await getUsers();
+     useEffect(() => {
+         getUsers();
 
          console.log("users", users);
      }, []);
