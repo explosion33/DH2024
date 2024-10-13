@@ -1,6 +1,6 @@
 import { useAuth0 } from "@auth0/auth0-react";
-
-const Introduction = () => {
+/* eslint react/prop-types: 0 */
+const Introduction = ({setStage}) => {
     const { user } = useAuth0();
     return (
         <div>
@@ -12,7 +12,7 @@ const Introduction = () => {
             </ul>
             <button onClick={
                 document.getElementById("contactList").append("<li><input placeholder='Email, phone number, etc.' type='text' /> <button>-</button></li>") }>+</button>
-            <button>Continue →</button>
+            <button onClick={() => setStage(1)}>Continue →</button>
         </div>
     )
 }
