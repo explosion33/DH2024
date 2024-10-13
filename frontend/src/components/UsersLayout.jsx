@@ -30,12 +30,10 @@ const UsersLayout = () => {
 
      }
 
-     useEffect(() => {
-         getUsers();
-
+     
+        getUsers();
         done = true;
-         console.log("users", users);
-     }, []);
+        console.log("users", users);
 
 
     while (!done) {}
@@ -48,6 +46,7 @@ const UsersLayout = () => {
                 justifyContent="center"       // Centers items horizontally
                 alignItems="center"  
                 sx={{ flexWrap: 'wrap', margin: '5% auto' }}>
+                {console.log(users)}
                 {users.map((userId, i) =>
                     <UserCard
                         key={i}
