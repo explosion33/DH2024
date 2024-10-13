@@ -18,14 +18,14 @@ const Onboarding = () => {
         (stage == 0) ? <Introduction setStage={setStage} setContact={setContact} /> : 
         (stage == 1) ? <SkillsNeeded setStage={setStage} setWants={setWants}  /> : 
         (stage == 2) ? <SkillsMastered setStage={setStage} setSkills={setSkills} /> : 
-        fetch("http://e2.armstronglabs.net/create_user/"+user?.sub, {
-            method: 'POST',
+        fetch("http://localhost:8081/info", {
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({contact, skills, wants}),
+            body: JSON.stringify({uid: user?.sub, first: user?.given_name, last: user?.family_name, contact: contact.split("\n"), skills: skills.split(","), wants: wants.split(",")}),
         }).then((response) => {
-            if (response.status === 201) {
+            if (response.status === 200) {
                 navigate("/people");
             } else {
                 setStage(0);
