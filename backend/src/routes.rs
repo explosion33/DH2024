@@ -22,13 +22,19 @@ use futures::executor;
 #[derive(Serialize, Deserialize, PartialEq, Eq, Debug, Clone)]
 pub struct MatchRequest {
     uid: String,
-    limit: i32,
+    limit: usize,
 }
 
 #[derive(Serialize, Deserialize, PartialEq, Debug, Clone)]
 pub struct Match {
     uid: String,
     percent: f32,
+}
+
+#[derive(Serialize, Deserialize, PartialEq, Debug, Clone)]
+pub struct Matches {
+    uid: String,
+    matches: Vec<Match>,
 }
 
 #[derive(Serialize, Deserialize, PartialEq, Debug, Clone)]
@@ -47,36 +53,21 @@ async fn get_file(file: PathBuf) -> Option<NamedFile> {
 }
 
 #[rocket::get("/matches", format = "json", data = "<req>")]
-async fn matches(req: Json<MatchRequest>) -> Json<Vec<Match>> {
-    println!("matches: {:?}", req);
+async fn matches(state: &State<Client>, req: Json<MatchRequest>) -> Result<Json<Matches>, Status> {
+    let mut matches = match db::get_matches(state.inner(), req.uid.clone()).await {
+        Ok(n) => n,
+        Err(_) => {return Err(Status::InternalServerError);}
+    };
 
-    let mut vec: Vec<Match> = Vec::new();
+    println!("got matches for {}: {:?}", req.uid, matches);
 
-    vec.push(Match {
-        uid: "user1".to_string(),
-        percent: 100.0,
-    });
-
-    vec.push(Match {
-        uid: "user2".to_string(),
-        percent: 84.3,
-    });
-
-    Json(vec)
-
+    matches.matches.truncate(req.limit);
+    Ok(Json(matches))
 }
 
 #[rocket::get("/skills/<limit>")]
-async fn skills(limit: i32) -> Json<Vec<String>> {
-    println!("limit: {:?}", limit);
-
-    let mut vec: Vec<String> = Vec::new();
-
-    
-    vec.push("uid1".to_string());
-    vec.push("uid2".to_string());
-
-    Json(vec)
+async fn skills(limit: usize) -> Json<Vec<String>> {
+    todo!()
 }
 
 #[rocket::get("/info/<uid>")]
@@ -122,6 +113,7 @@ pub fn start_api() {
         .block_on(async move {
             let client = db::init().await;
             println!("DB Connected");
+
             let _ = rocket::build()
             .mount("/", rocket::routes![get_file, matches, skills, info, add_user])
             .manage(client)
