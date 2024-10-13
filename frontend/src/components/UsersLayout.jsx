@@ -21,7 +21,7 @@ const UsersLayout = () => {
             }).then(response => response.json().then(response => {
                 console.log("Filling Users")
                 console.log(response);
-                for (let user in response.matches) {
+                for (let user of response.matches) {
                     users.push(user.uid);
                 }
                 console.log(users);
