@@ -1,12 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import CardActions from '@mui/material/CardActions';
+import ContactPaper from './ContactPaper';
 
 const UserCard = ({ user }) => {
+
+    const [open, setOpen] = useState(false);
+
+    const handleOpen = () => setOpen(true);
 
     return (
         <Card sx={{
@@ -36,8 +41,9 @@ const UserCard = ({ user }) => {
             </CardContent>
             <CardActions>
                 <Button size="small">Share</Button>
-                <Button size="small">Learn More</Button>
+                <Button size="small" onClick={() => handleOpen()}>Lets Connect!</Button>
             </CardActions>
+            {open && <ContactPaper open={open} setOpen={setOpen} user={user} />}
         </Card>
     )
 };

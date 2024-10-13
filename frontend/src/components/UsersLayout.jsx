@@ -47,7 +47,7 @@ const UsersLayout = () => {
                 useFlexGap
                 justifyContent="center"       // Centers items horizontally
                 alignItems="center"  
-                sx={{ flexWrap: 'wrap' }}>
+                sx={{ flexWrap: 'wrap', margin: '5% auto' }}>
                 {users.map((user, i) =>
                     <UserCard
                         key={i}
