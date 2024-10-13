@@ -8,7 +8,7 @@ const HomePage = () => {
     
     if(isAuthenticated && user){
         try{
-            fetch('http://e2.armstronglabs.net/info/'+user?.sub, {
+            fetch('http://localhost:8081/info/'+user?.sub, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -27,16 +27,18 @@ const HomePage = () => {
 
     return (
         <>
-            <div>
+            <header className="question">
                 <h1>ExperTwice</h1>
-            </div>
+            </header>
             <main>
-                <img />
-                <div>
-                    <p>Know a thing or two?</p>
-                    <p>Learn a thing or two.</p>
-                    <button onClick={() => navigate('/onboarding')}>Sign Up | Log In</button>
-                </div>
+                <center>
+                    <img src="./logo.svg" alt="ExperTwice" />
+                    <div>
+                        <p>Know a thing or two?</p>
+                        <p>Learn a thing or two.</p>
+                        <button onClick={() => navigate('/onboarding')}>Sign Up | Log In</button>
+                    </div>
+                </center>
             </main>
         </>
 

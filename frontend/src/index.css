@@ -1,0 +1,74 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Quicksand", sans-serif;
+  font-optical-sizing: auto;
+  --dark: #121E53;
+  --mid: #64BDD4;
+  --light: #D0DEE1;
+}
+:root {
+  color: var(--dark);
+  background: var(--light);
+  overflow-x: hidden;
+}
+
+header {
+  background: var(--mid);
+  border-bottom: 0.5em solid var(--dark);
+  padding: 100vh 50vw 2em;
+  width: 200vw;
+  rotate: -3deg;
+  position: relative;
+  left: -50vw;
+  top: -97vh;
+  overflow: hidden;
+}
+h1 {
+  font-size: 4rem;
+}
+img {
+  max-width: 20rem;
+  filter: drop-shadow(2px 4px 6px var(--dark));
+}
+main {
+  display: flex;
+  height: 100vh;
+  position: relative;
+  top: -100vh;
+}
+main > center {
+  margin: auto;
+  display: flex;
+  align-items: center;
+}
+main > center > * {
+  margin: 2em;
+}
+main.question > center {
+  flex-direction: column;
+}
+p {
+  font-size: 2.5rem;
+  font-weight: bold;
+}
+
+button {
+  background: var(--mid);
+  font-weight: bold;
+  color: var(--dark);
+  padding: .25em;
+  margin: .5em;
+  border-radius: 0.5em;
+  font-size: 2.5rem;
+  border: 0;
+  filter: drop-shadow(2px 4px 6px var(--dark));
+  cursor: pointer;
+}
+
+button:hover {
+  filter: drop-shadow(5px 9px 10px var(--dark))
+}
