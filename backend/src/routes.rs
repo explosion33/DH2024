@@ -52,7 +52,7 @@ async fn get_file(file: PathBuf) -> Option<NamedFile> {
     NamedFile::open(Path::new("public/").join(file)).await.ok()
 }
 
-#[rocket::get("/api/matches", format = "json", data = "<req>")]
+#[rocket::post("/api/matches", format = "json", data = "<req>")]
 async fn matches(state: &State<Client>, req: Json<MatchRequest>) -> Result<Json<Matches>, Status> {
     let mut matches = match db::get_matches(state.inner(), req.uid.clone()).await {
         Ok(n) => n,
