@@ -23,6 +23,7 @@ const UsersLayout = () => {
                 for (let user in response.matches) {
                     users.push(user.uid);
                 }
+                console.log(users);
             }));
 
      }
