@@ -5,15 +5,14 @@ use crate::db;
 use std::path::{Path, PathBuf};
 
 use mongodb::Client;
-use rocket::http::Status;
-use rocket::{State};
+use rocket::fairing::{Fairing, Info, Kind};
+use rocket::http::{Header, Method, Status};
+use rocket::{Request, Response, State};
 use rocket::{
     self, fs::NamedFile, Config
 };
 
 use rocket::serde::{Serialize, Deserialize, json::Json};
-
-use futures::executor;
 
 
 //mongodb+srv://admin:admin@dubhacks.rvpym.mongodb.net/
@@ -65,9 +64,9 @@ async fn matches(state: &State<Client>, req: Json<MatchRequest>) -> Result<Json<
     Ok(Json(matches))
 }
 
-#[rocket::get("/skills/<limit>")]
-async fn skills(limit: usize) -> Json<Vec<String>> {
-    todo!()
+#[rocket::get("/users/<limit>")]
+async fn users(state: &State<Client>, limit: usize) -> Json<Vec<User>> {
+    Json(db::get_random_users(state.inner(), limit).await)
 }
 
 #[rocket::get("/info/<uid>")]
@@ -84,6 +83,36 @@ async fn info(state: &State<Client>, uid: String) -> Result<Json<User>, Json<()>
         Err(_) => {
             Err(Json(()))
         },
+    }
+}
+
+
+pub struct CORS;
+
+#[rocket::async_trait]
+impl Fairing for CORS {
+    fn info(&self) -> Info {
+        Info {
+            name: "Add CORS headers to responses",
+            kind: Kind::Response,
+        }
+    }
+
+    async fn on_response<'r>(&self, request: &'r Request<'_>, response: &mut Response<'r>) {
+        if request.method() == Method::Options {
+            response.set_status(Status::NoContent);
+            response.set_header(Header::new(
+                "Access-Control-Allow-Methods",
+                "POST, PATCH, GET, DELETE",
+            ));
+            response.set_header(Header::new("Access-Control-Allow-Headers", "*"));
+        }
+
+        response.set_header(Header::new(
+            "Access-Control-Allow-Origin",
+            "http://localhost:3000",
+        ));
+        response.set_header(Header::new("Access-Control-Allow-Credentials", "true"));
     }
 }
 
@@ -115,8 +144,9 @@ pub fn start_api() {
             println!("DB Connected");
 
             let _ = rocket::build()
-            .mount("/", rocket::routes![get_file, matches, skills, info, add_user])
+            .mount("/", rocket::routes![get_file, matches, users, info, add_user])
             .manage(client)
+            .attach(CORS)
             .launch()
             .await;
         });
