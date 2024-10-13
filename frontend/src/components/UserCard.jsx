@@ -7,7 +7,7 @@ import Button from '@mui/material/Button';
 import CardActions from '@mui/material/CardActions';
 import ContactPaper from './ContactPaper';
 
-const UserCard = ({ userId }) => {
+const UserCard = ({ userId, key }) => {
 
     const [open, setOpen] = useState(false);
 
