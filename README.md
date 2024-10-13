@@ -2,7 +2,7 @@
 
 A social connection app by [Nick Laustrup](https://github.com/nicklaustrup), [Ethan Armstrong](https://github.com/explosion33), [Stephen Ottaway](https://github.com/stephenottaway), and [Will Garrison](https://github.com/VVill-ga).
 
-> A career woodworker with a hidden ambision for the orchastra meets a violinist who wishes he could make those little wooden birds. 
+> A career woodworker with a hidden ambision for the orchestra meets a violinist who wishes he could make those little wooden birds. 
 >
 > A polyglot with a constant sweet cravings meets an old baker who's kids have moved to France. 
 >
