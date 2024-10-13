@@ -47,12 +47,12 @@ pub struct User {
     pub wants: Vec<String>,
 }
 
-#[rocket::get("/static/<file>")]
+#[rocket::get("/api/static/<file>")]
 async fn get_file(file: PathBuf) -> Option<NamedFile> {
     NamedFile::open(Path::new("public/").join(file)).await.ok()
 }
 
-#[rocket::get("/matches", format = "json", data = "<req>")]
+#[rocket::get("/api/matches", format = "json", data = "<req>")]
 async fn matches(state: &State<Client>, req: Json<MatchRequest>) -> Result<Json<Matches>, Status> {
     let mut matches = match db::get_matches(state.inner(), req.uid.clone()).await {
         Ok(n) => n,
@@ -65,12 +65,12 @@ async fn matches(state: &State<Client>, req: Json<MatchRequest>) -> Result<Json<
     Ok(Json(matches))
 }
 
-#[rocket::get("/users/<limit>")]
+#[rocket::get("/api/users/<limit>")]
 async fn users(state: &State<Client>, limit: usize) -> Json<Vec<User>> {
     Json(db::get_random_users(state.inner(), limit).await)
 }
 
-#[rocket::get("/info/<uid>")]
+#[rocket::get("/api/info/<uid>")]
 async fn info(state: &State<Client>, uid: String) -> Result<Json<User>, Json<()>> {
     println!("uid: {:?}", uid);
 
@@ -87,7 +87,7 @@ async fn info(state: &State<Client>, uid: String) -> Result<Json<User>, Json<()>
     }
 }
 
-#[rocket::get("/ai")]
+#[rocket::get("/api/ai")]
 async fn get_api(state: &State<Client>) -> Status {
     let users = db::get_random_users(state.inner(), 10).await;
 
@@ -133,7 +133,7 @@ impl Fairing for CORS {
     }
 }
 
-#[rocket::put("/info", format = "json", data = "<user>")]
+#[rocket::put("/api/info", format = "json", data = "<user>")]
 async fn add_user(state: &State<Client>, user: Json<User>) -> Status {
     println!("user: {:?}", user);
 
