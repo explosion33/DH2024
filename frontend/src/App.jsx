@@ -1,27 +1,19 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import './App.css'
 import HomePage from './pages/HomePage'
-import { useAuth0 } from "@auth0/auth0-react";
-import Navigation from "./components/Navigation";
+import Onboarding from "./pages/Onboarding";
+import PeopleView from "./pages/PeopleView";
 
 
 function App() {
-  const { user, isAuthenticated, isLoading } = useAuth0();
-
-
-  // if (isLoading) {
-  //   return <div>Loading ...</div>;
-  // }
-  // isAuthenticated && (
 
   return (
-    
       <>
-        <Navigation />
-
         <BrowserRouter>
           <Routes>
             <Route index element={<HomePage />} />
+            <Route path="/onboarding" element={<Onboarding />} />
+            <Route path="/people" element={<PeopleView />} />
           </Routes>
         </BrowserRouter>
       </>

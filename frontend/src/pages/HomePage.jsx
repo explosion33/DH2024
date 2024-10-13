@@ -1,26 +1,43 @@
-import Profile from '../components/Profile';
-
-import UserCard_copy from '../components/UserCard_copy';
+import { useNavigate } from 'react-router-dom';
 import { useAuth0 } from "@auth0/auth0-react";
-import UsersLayout from '../components/UsersLayout';
-import UserCard from '../components/UserCard';
 
 const HomePage = () => {
 
-    const { user, isAuthenticated, isLoading } = useAuth0();
-
+    const navigate = useNavigate();
+    const { isAuthenticated, user } = useAuth0();
+    
+    if(isAuthenticated && user){
+        try{
+            fetch('http://e2.armstronglabs.net/info/'+user?.sub, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            }).then((response) => {
+                if (response.status === 200) {
+                    navigate('/people');
+                } else {
+                    navigate('/onboarding');
+                }
+            });
+        } catch {
+            navigate('/people');
+        }
+    }
 
     return (
         <>
-            <UsersLayout
-                display="flex"
-                justifyContent="center"       // Centers items horizontally
-                alignItems="center"           // Centers items vertically (optional)
-                flexWrap="wrap"               // Allows items to wrap to the next line if needed
-                gap={2}                       // Adds spacing between items
-                sx={{ maxWidth: '100%', margin: '2 auto' }} // Centers container itself and limits width
-            />
-
+            <div>
+                <h1>ExperTwice</h1>
+            </div>
+            <main>
+                <img />
+                <div>
+                    <p>Know a thing or two?</p>
+                    <p>Learn a thing or two.</p>
+                    <button onClick={() => navigate('/onboarding')}>Sign Up | Log In</button>
+                </div>
+            </main>
         </>
 
     );
