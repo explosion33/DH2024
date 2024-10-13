@@ -8,6 +8,7 @@ const UsersLayout = () => {
 
     const { user } = useAuth0();
     let users = [];
+    var done = false;
 
     console.log("UsersLayout");
     const getUsers = async () => {
@@ -32,10 +33,12 @@ const UsersLayout = () => {
      useEffect(() => {
          getUsers();
 
+        done = true;
          console.log("users", users);
      }, []);
 
-    console.log("point")
+
+    while (!done) {}
 
     return (
         <>
