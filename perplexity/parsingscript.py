@@ -1,67 +1,114 @@
 import requests
+import sseclient
 import json
+import logging
+from typing import Generator, Union, Dict, Any
 
-# API endpoint and key
-url = "https://api.perplexity.ai/chat/completions"
-api_key = "<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>"
+def make_perplexity_api_call(
+    api_key: str, 
+    model: str, 
+    user_message: str, 
+    stream: bool = False,
+    temperature: float = 0.2,
+    max_tokens: int = 1000
+) -> Union[Dict[str, Any], Generator[str, None, None]]:
+    url = "https://api.perplexity.ai/chat/completions"
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json"
+    }
+    payload = {
+        "model": model,
+        "messages": [{"role": "user", "content": user_message}],
+        "temperature": temperature,
+        "max_tokens": max_tokens,
+        "stream": stream
+    }
+    try:
+        if stream:
+            return _stream_response(url, payload, headers)
+        else:
+            return _normal_response(url, payload, headers)
+    except requests.exceptions.RequestException as e:
+        logging.error(f"Request failed: {e}")
+        return {"error": str(e)}
 
-# Payload for the API request
-payload = {
-    "model": "llama-3.1-sonar-small-128k-online",
-    "messages": [
-        {
-            "role": "system",
-            "content": ""    # Optional system message
-        },
-        {
-            "role": "user",
-            "content": "What is the compatibility of different systems?"  # Example query
-        }
-    ],
-    "max_tokens": "Optional",
-    "temperature": 0.2,
-    "top_p": 0.9,
-    "return_citations": False,
-    "search_domain_filter": ["perplexity.ai"],
-    "return_images": False,
-    "return_related_questions": False,
-    "search_recency_filter": "month",
-    "top_k": 0,
-    "stream": False,
-    "presence_penalty": 0,
-    "frequency_penalty": 1
-}
+def _stream_response(
+    url: str, 
+    payload: dict, 
+    headers: dict
+) -> Generator[str, None, None]:
+    try:
+        with requests.post(url, json=payload, headers=headers, stream=True) as response:
+            response.raise_for_status()
+            for event in sseclient.SSEClient(response).events():
+                if event.data == '[DONE]':
+                    break
+                try:
+                    content = json.loads(event.data)['choices'][0]['delta'].get('content', '')
+                    if content:
+                        yield content
+                except json.JSONDecodeError:
+                    logging.error(f"Failed to decode JSON: {event.data}")
+    except requests.exceptions.RequestException as e:
+        logging.error(f"Stream request failed: {e}")
+        yield f"Error: {str(e)}"
 
-# Headers for the API request (with valid API key)
-headers = {
-    "Authorization": f"Bearer {api_key}",
-    "Content-Type": "application/json"
-}
+def _normal_response(
+    url: str, 
+    payload: dict, 
+    headers: dict
+) -> Dict[str, Any]:
+    try:
+        response = requests.post(url, json=payload, headers=headers)
+        response.raise_for_status()
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        logging.error(f"Normal request failed: {e}")
+        return {"error": f"Request error: {str(e)}"}
 
-# Send the POST request to the Perplexity AI API
-response = requests.post(url, json=payload, headers=headers)
+# Usage Example
+api_key = "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"
 
-# Check if the request was successful
-if response.status_code == 200:
-    # Parse the JSON response
-    data = response.json()
-    
-    # Specify the threshold value (for example, compatibility score)
-    threshold = 50  
-    
-    # Assuming the JSON contains an array of results with a 'score' or 'compatibility' field
-    if "results" in data:  # Ensure 'results' key exists in the response
-        filtered_results = [
-            result for result in data["results"]
-            if result.get("score", 0) > threshold  # Check if 'score' is above threshold
-        ]
-        
-        # Output the filtered results
-        print(f"Results with score above {threshold}:")
-        for result in filtered_results:
-            print(json.dumps(result, indent=4))  # Pretty print the filtered result
-    else:
-        print("No 'results' key in the response JSON.")
+# Define the user message that you want to send to the API
+user_message = """
+Here are some users with their wants and knows:
+user1: [['user2', 'machine learning', 'machine learning', 0], ['user3', 'game design', 'game design', 0]]
+user2: [['user1', 'SEO optimization', 'SEO optimization', 0], ['user3', 'virtual reality development', 'virtual reality development', 0]]
+user3: [['user1', 'web development', 'web development', 0], ['user2', 'social media management', 'social media management', 0]]
+
+Please provide compatibility scores based on these wants and knows. Examples of scoring:
+- Math and Geometry: 0.9
+- Swimming and Running: 0.7
+- Painting and Baseball: 0.0
+- SEO optimization and digital marketing: 0.8
+- Game design and virtual reality development: 0.6
+- Web development and social media management: 0.5
+"""
+
+# Get normal response
+normal_response = make_perplexity_api_call(
+    api_key,
+    "llama-3.1-sonar-small-128k-online",
+    user_message,
+    stream=False
+)
+
+print(normal_response)
+
+# Print the entire response for debugging
+print("Full API Response:", json.dumps(normal_response, indent=2))
+
+# Check if the response contains 'choices'
+if 'choices' in normal_response:
+    print("Parsed Compatibility Data:")
+    for user in normal_response['choices']:
+        # Here we check if 'userID' exists in the user dictionary
+        if 'userID' in user:
+            userID = user['userID']
+            compatibilities = user['compatibilities']
+            print(f"{userID}: {compatibilities}")
+        else:
+            print("No userID found in:", user)
 else:
-    print(f"Request failed with status code {response.status_code}")
-    print(f"Response: {response.text}")
+    print("Error in response:", normal_response.get("error", "Unknown error"))
