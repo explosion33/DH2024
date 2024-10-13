@@ -1,15 +1,19 @@
 import Profile from '../components/Profile';
-import LoginButton from '../components/LoginButton';
-import LogoutButton from '../components/LogoutButton';
+
+import UserCard_copy from '../components/UserCard_copy';
+import { useAuth0 } from "@auth0/auth0-react";
+import UsersLayout from '../components/UsersLayout';
+import UserCard from '../components/UserCard';
 
 const HomePage = () => {
+
+    const { user, isAuthenticated, isLoading } = useAuth0();
+
+
     return (
         <>
-            <h1>ExperTwice</h1>
-            <p>Know a thing or two?<br /> Learn a thing or two.</p>
-            <Profile />
-            <LoginButton />
-            <LogoutButton />
+            <h2>Home</h2>
+            <UsersLayout />
         </>
 
     );
