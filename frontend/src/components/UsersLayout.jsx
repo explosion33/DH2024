@@ -8,15 +8,18 @@ const UsersLayout = () => {
     const { user } = useAuth0();
     let users = [];
 
-    const getUsers = async () => {
+    console.log("UsersLayout");
+    const getUsers = () => {
+        console.log("getUsers")
 
-          await fetch('https://e2.armstronglabs.net/api/matches/'+user?.sub+'/100', {
+          fetch('https://e2.armstronglabs.net/api/matches/'+user?.sub+'/100', {
               method: "GET",
               headers: {
                 "Content-Type": "application/json",
                 "Accept": "application/json"
               },
             }).then(response => response.json().then(response => {
+                console.log("Filling Users")
                 for (let user in response.matches) {
                     users.push(user.uid);
                 }
