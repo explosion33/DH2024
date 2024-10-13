@@ -21,7 +21,7 @@ const UserCard = ({ userId }) => {
             headers: {
             "Content-Type": "application/json",
             "Accept": "application/json"
-        }}).then(resp => resp.json().then(res => {response = res; console.log(res);}));
+        }}).then(resp => {console.log(resp); resp.json().then(res => {response = res; console.log(res);})});
     }
      //useEffect(() => {
          getInfo();
